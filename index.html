@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cuaderno Económico - Bs. (Cloud)</title>
+    <title>Cuaderno Económico - Bs.</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body { background-color: #f8f9fa; font-family: 'Segoe UI', sans-serif; }
@@ -11,63 +11,83 @@
         .moneda { font-weight: bold; color: #2c3e50; }
         .btn-sm { font-size: 0.75rem; }
         .categoria-badge { font-size: 0.7rem; }
-        .informe { background: #e9ecef; padding: 15px; border-radius: 8px; }
+        .alert-pending { background-color: #fff3cd; }
+        .alert-paid { background-color: #d1e7dd; }
     </style>
 </head>
 <body>
     <div class="container mt-4">
-        <h1 class="text-center mb-4">Cuaderno Económico (Bs.) - Cloud</h1>
+        <h1 class="text-center mb-4">Cuaderno Económico (Bs.)</h1>
         
-        <!-- Estado de conexión -->
-        <div id="estado" class="alert alert-info text-center">Conectando a la base de datos...</div>
-
-        <!-- Dashboard -->
+        <!-- Dashboard de Balance -->
         <div class="card mb-4">
-            <div class="card-header d-flex justify-content-between">
-                <h5>Balance Actual</h5>
-                <button class="btn btn-sm btn-outline-primary" onclick="mostrarInforme()">Informe Mensual</button>
-            </div>
+            <div class="card-header"><h5>Balance Actual</h5></div>
             <div class="card-body text-center">
                 <p class="h3 moneda" id="balance">Bs. 0,00</p>
-                <small>Ingresos: <span class="moneda" id="totalIngresos">0</span> | Egresos: <span class="moneda" id="totalEgresos">0</span></small>
+                <small>Ingresos: <span class="moneda" id="totalIngresos">Bs. 0,00</span> | Egresos: <span class="moneda" id="totalEgresos">Bs. 0,00</span></small>
             </div>
         </div>
 
-        <!-- Ingresos -->
+        <!-- Sección Ingresos -->
         <div class="section">
             <h3>Ingresos</h3>
             <form id="formIngreso" class="row g-3 mb-3">
-                <div class="col-md-3"><input type="date" class="form-control" id="fechaIngreso" required></div>
-                <div class="col-md-5"><input type="text" class="form-control" id="descIngreso" placeholder="Descripción" required></div>
-                <div class="col-md-3"><input type="number" class="form-control" id="montoIngreso" placeholder="Monto (Bs.)" step="0.01" required></div>
-                <div class="col-md-1"><button type="submit" class="btn btn-success w-100">Agregar</button></div>
+                <div class="col-md-3">
+                    <input type="date" class="form-control" id="fechaIngreso" required>
+                </div>
+                <div class="col-md-5">
+                    <input type="text" class="form-control" id="descIngreso" placeholder="Descripción" required>
+                </div>
+                <div class="col-md-3">
+                    <input type="number" class="form-control" id="montoIngreso" placeholder="Monto (Bs.)" step="0.01" required>
+                </div>
+                <div class="col-md-1">
+                    <button type="submit" class="btn btn-success w-100">Agregar</button>
+                </div>
             </form>
             <table class="table table-striped" id="tablaIngresos">
-                <thead><tr><th>Fecha</th><th>Descripción</th><th>Monto</th><th></th></tr></thead>
+                <thead><tr><th>Fecha</th><th>Descripción</th><th>Monto</th><th>Acción</th></tr></thead>
                 <tbody></tbody>
             </table>
         </div>
 
-        <!-- Egresos -->
+        <!-- Sección Egresos -->
         <div class="section">
             <h3>Egresos</h3>
+
+            <!-- Gestionar Categorías -->
             <div class="card mb-3">
                 <div class="card-body">
-                    <h6>Gestionar Categorías</h6>
-                    <div class="row g-2">
-                        <div class="col-md-5"><input type="text" class="form-control form-control-sm" id="nuevaCategoria" placeholder="Nueva categoría"></div>
-                        <div class="col-md-3"><button type="button" class="btn btn-outline-primary btn-sm w-100" onclick="agregarCategoria()">+ Agregar</button></div>
+                    <h6 class="card-title mb-2">Gestionar Categorías</h6>
+                    <div class="row g-2 align-items-center">
+                        <div class="col-md-5">
+                            <input type="text" class="form-control form-control-sm" id="nuevaCategoria" placeholder="Nueva categoría (ej: Netflix)">
+                        </div>
+                        <div class="col-md-3">
+                            <button type="button" class="btn btn-outline-primary btn-sm w-100" onclick="agregarCategoria()">+ Agregar</button>
+                        </div>
                     </div>
                     <div class="mt-2" id="listaCategorias"></div>
                 </div>
             </div>
 
+            <!-- Formulario de Egreso -->
             <form id="formEgreso" class="row g-3 mb-3">
-                <div class="col-md-3"><input type="date" class="form-control" id="fechaEgreso" required></div>
-                <div class="col-md-3"><select class="form-control" id="categoriaEgreso" required></select></div>
-                <div class="col-md-4"><input type="text" class="form-control" id="descEgreso" placeholder="Descripción" required></div>
-                <div class="col-md-2"><input type="number" class="form-control" id="montoEgreso" placeholder="Monto (Bs.)" step="0.01" required></div>
-                <div class="col-12 text-end"><button type="submit" class="btn btn-danger">Agregar Egreso</button></div>
+                <div class="col-md-3">
+                    <input type="date" class="form-control" id="fechaEgreso" required>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-control" id="categoriaEgreso" required></select>
+                </div>
+                <div class="col-md-4">
+                    <input type="text" class="form-control" id="descEgreso" placeholder="Descripción" required>
+                </div>
+                <div class="col-md-2">
+                    <input type="number" class="form-control" id="montoEgreso" placeholder="Monto (Bs.)" step="0.01" required>
+                </div>
+                <div class="col-12 text-end">
+                    <button type="submit" class="btn btn-danger">Agregar Egreso</button>
+                </div>
             </form>
 
             <table class="table table-striped" id="tablaEgresos">
@@ -76,98 +96,99 @@
             </table>
         </div>
 
-        <!-- Recordatorios -->
+        <!-- Sección Recordatorios -->
         <div class="section">
-            <h3>Recordatorios</h3>
+            <h3>Recordatorios: Pagos y Cancelaciones</h3>
             <form id="formRecordatorio" class="row g-3 mb-3">
-                <div class="col-md-3"><input type="date" class="form-control" id="fechaRecordatorio" required></div>
-                <div class="col-md-5"><input type="text" class="form-control" id="descRecordatorio" placeholder="Ej: Pago luz" required></div>
-                <div class="col-md-3"><input type="number" class="form-control" id="montoRecordatorio" placeholder="Monto (Bs.)" step="0.01"></div>
-                <div class="col-md-1"><button type="submit" class="btn btn-warning w-100">Agregar</button></div>
+                <div class="col-md-3">
+                    <input type="date" class="form-control" id="fechaRecordatorio" required>
+                </div>
+                <div class="col-md-5">
+                    <input type="text" class="form-control" id="descRecordatorio" placeholder="Ej: Pago luz, Impuesto municipal" required>
+                </div>
+                <div class="col-md-3">
+                    <input type="number" class="form-control" id="montoRecordatorio" placeholder="Monto estimado (Bs.)" step="0.01">
+                </div>
+                <div class="col-md-1">
+                    <button type="submit" class="btn btn-warning w-100">Agregar</button>
+                </div>
             </form>
             <table class="table" id="tablaRecordatorios">
-                <thead><tr><th>Vence</th><th>Descripción</th><th>Monto</th><th>Estado</th><th></th></tr></thead>
+                <thead><tr><th>Fecha Venc.</th><th>Descripción</th><th>Monto Est.</th><th>Estado</th><th>Acción</th></tr></thead>
                 <tbody></tbody>
             </table>
         </div>
-
-        <!-- Informe Mensual (Oculto) -->
-        <div id="seccionInforme" class="card mt-4" style="display:none;">
-            <div class="card-header d-flex justify-content-between">
-                <h5>Informe Mensual: <span id="mesInforme"></span></h5>
-                <button class="btn btn-sm btn-success" onclick="exportarCSV()">Exportar CSV</button>
-            </div>
-            <div class="card-body informe">
-                <div id="resumenInforme"></div>
-                <table class="table mt-3" id="tablaInforme">
-                    <thead><tr><th>Tipo</th><th>Descripción</th><th>Categoría</th><th>Monto</th></tr></thead>
-                    <tbody></tbody>
-                </table>
-            </div>
-        </div>
     </div>
 
-    <!-- Firebase SDK -->
-    <script type="module">
-        // REEMPLAZA ESTO CON TU CONFIGURACIÓN DE FIREBASE
-        const firebaseConfig = {
-            apiKey: "TU_API_KEY",
-            authDomain: "TU_PROYECTO.firebaseapp.com",
-            projectId: "TU_PROYECTO",
-            storageBucket: "TU_PROYECTO.appspot.com",
-            messagingSenderId: "123456789",
-            appId: "1:123456789:web:abcdef123456"
-        };
-
-        // Inicializar Firebase
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, deleteDoc, updateDoc, doc, onSnapshot, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        // Colecciones
-        const colIngresos = collection(db, "ingresos");
-        const colEgresos = collection(db, "egresos");
-        const colRecordatorios = collection(db, "recordatorios");
-        const colCategorias = collection(db, "categorias");
-
-        // Estado
-        let ingresos = [], egresos = [], recordatorios = [], categorias = [
-            "Servicios Básicos", "Impuestos Municipales", "Impuestos Mensuales", "Impuestos Trimestrales", "Otros"
-        ];
-
-        // Formatear Bs.
+    <script>
+        // Formatear número como Bs.
         function formatoBs(valor) {
-            const num = parseFloat(valor) || 0;
+            if (isNaN(valor)) return 'Bs. 0,00';
+            const num = parseFloat(valor);
             return 'Bs. ' + num.toLocaleString('es-BO', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         }
 
-        // Escuchar datos en tiempo real
-        onSnapshot(colIngresos, snap => { ingresos = snap.docs.map(d => ({id: d.id, ...d.data()})); renderAll(); });
-        onSnapshot(colEgresos, snap => { egresos = snap.docs.map(d => ({id: d.id, ...d.data()})); renderAll(); });
-        onSnapshot(colRecordatorios, snap => { recordatorios = snap.docs.map(d => ({id: d.id, ...d.data()})); renderAll(); });
-        onSnapshot(colCategorias, snap => {
-            const cats = snap.docs.map(d => d.data().nombre);
-            categorias = cats.length > 0 ? cats : categorias;
-            renderSelectCategorias();
-            renderListaCategorias();
-        });
+        // Datos (localStorage)
+        let ingresos = JSON.parse(localStorage.getItem('ingresos')) || [];
+        let egresos = JSON.parse(localStorage.getItem('egresos')) || [];
+        let recordatorios = JSON.parse(localStorage.getItem('recordatorios')) || [];
+        let categoriasEgresos = JSON.parse(localStorage.getItem('categoriasEgresos')) || [
+            "Servicios Básicos", "Impuestos Municipales", "Impuestos Mensuales", 
+            "Impuestos Trimestrales", "Otros"
+        ];
 
-        // Renderizar todo
-        function renderAll() {
-            calcularBalance();
-            renderIngresos();
-            renderEgresos();
-            renderRecordatorios();
-            document.getElementById('estado').textContent = 'Conectado a la nube';
-            document.getElementById('estado').className = 'alert alert-success text-center';
+        // Guardar datos
+        function guardarDatos() {
+            localStorage.setItem('ingresos', JSON.stringify(ingresos));
+            localStorage.setItem('egresos', JSON.stringify(egresos));
+            localStorage.setItem('recordatorios', JSON.stringify(recordatorios));
+            localStorage.setItem('categoriasEgresos', JSON.stringify(categoriasEgresos));
+        }
+
+        // Categorías
+        function renderSelectCategorias() {
+            const select = document.getElementById('categoriaEgreso');
+            select.innerHTML = categoriasEgresos.map(cat => `<option value="${cat}">${cat}</option>`).join('');
+        }
+
+        function renderListaCategorias() {
+            const cont = document.getElementById('listaCategorias');
+            cont.innerHTML = categoriasEgresos.map((cat, idx) => `
+                <span class="badge bg-secondary me-1 mb-1 categoria-badge">
+                    ${cat}
+                    <button type="button" class="btn-close btn-close-white btn-sm ms-1" onclick="eliminarCategoria(${idx})" title="Eliminar"></button>
+                </span>
+            `).join('');
+        }
+
+        function agregarCategoria() {
+            const input = document.getElementById('nuevaCategoria');
+            const nombre = input.value.trim();
+            if (nombre && !categoriasEgresos.includes(nombre)) {
+                categoriasEgresos.push(nombre);
+                categoriasEgresos.sort();
+                guardarDatos();
+                renderSelectCategorias();
+                renderListaCategorias();
+                input.value = '';
+            } else if (nombre) {
+                alert('Categoría ya existe o inválida.');
+            }
+        }
+
+        function eliminarCategoria(idx) {
+            if (confirm(`¿Eliminar "${categoriasEgresos[idx]}"?`)) {
+                categoriasEgresos.splice(idx, 1);
+                guardarDatos();
+                renderSelectCategorias();
+                renderListaCategorias();
+            }
         }
 
         // Balance
         function calcularBalance() {
-            const totalIn = ingresos.reduce((s, i) => s + parseFloat(i.monto || 0), 0);
-            const totalEg = egresos.reduce((s, e) => s + parseFloat(e.monto || 0), 0);
+            const totalIn = ingresos.reduce((sum, i) => sum + parseFloat(i.monto || 0), 0);
+            const totalEg = egresos.reduce((sum, e) => sum + parseFloat(e.monto || 0), 0);
             const balance = totalIn - totalEg;
             document.getElementById('totalIngresos').textContent = formatoBs(totalIn);
             document.getElementById('totalEgresos').textContent = formatoBs(totalEg);
@@ -178,27 +199,27 @@
         // Renderizar tablas
         function renderIngresos() {
             const tbody = document.querySelector('#tablaIngresos tbody');
-            tbody.innerHTML = ingresos.map(i => `
+            tbody.innerHTML = ingresos.map((ing, idx) => `
                 <tr>
-                    <td>${i.fecha}</td>
-                    <td>${i.desc}</td>
-                    <td class="moneda">${formatoBs(i.monto)}</td>
-                    <td><button class="btn btn-sm btn-danger" onclick="eliminar('ingresos', '${i.id}')">Eliminar</button></td>
+                    <td>${ing.fecha}</td>
+                    <td>${ing.desc}</td>
+                    <td class="moneda">${formatoBs(ing.monto)}</td>
+                    <td><button class="btn btn-sm btn-danger" onclick="eliminarIngreso(${idx})">Eliminar</button></td>
                 </tr>
             `).join('');
         }
 
         function renderEgresos() {
             const tbody = document.querySelector('#tablaEgresos tbody');
-            tbody.innerHTML = egresos.map(e => `
+            tbody.innerHTML = egresos.map((egr, idx) => `
                 <tr>
-                    <td>${e.fecha}</td>
-                    <td><span class="badge bg-info">${e.categoria}</span></td>
-                    <td>${e.desc}</td>
-                    <td class="moneda">${formatoBs(e.monto)}</td>
+                    <td>${egr.fecha}</td>
+                    <td><span class="badge bg-info">${egr.categoria}</span></td>
+                    <td>${egr.desc}</td>
+                    <td class="moneda">${formatoBs(egr.monto)}</td>
                     <td>
-                        <button class="btn btn-sm btn-warning" onclick="editarEgreso('${e.id}', '${e.fecha}', '${e.categoria}', '${e.desc}', '${e.monto}')">Editar</button>
-                        <button class="btn btn-sm btn-danger" onclick="eliminar('egresos', '${e.id}')">Eliminar</button>
+                        <button class="btn btn-sm btn-warning" onclick="editarEgreso(${idx})">Editar</button>
+                        <button class="btn btn-sm btn-danger" onclick="eliminarEgreso(${idx})">Eliminar</button>
                     </td>
                 </tr>
             `).join('');
@@ -207,173 +228,141 @@
         function renderRecordatorios() {
             const hoy = new Date().toISOString().split('T')[0];
             const tbody = document.querySelector('#tablaRecordatorios tbody');
-            tbody.innerHTML = recordatorios.map(r => {
-                const vencido = r.fecha <= hoy && !r.pagado;
+            tbody.innerHTML = recordatorios.map((rec, idx) => {
+                const esVencido = rec.fecha <= hoy && !rec.pagado;
+                const clase = rec.pagado ? 'alert-paid' : (esVencido ? 'alert-pending' : '');
                 return `
-                    <tr class="${vencido ? 'table-warning' : ''}">
-                        <td>${r.fecha}</td>
-                        <td>${r.desc}</td>
-                        <td class="moneda">${r.monto ? formatoBs(r.monto) : 'N/A'}</td>
-                        <td><span class="badge ${r.pagado ? 'bg-success' : 'bg-warning'}">${r.pagado ? 'Pagado' : 'Pendiente'}</span></td>
+                    <tr class="${clase}">
+                        <td>${rec.fecha}</td>
+                        <td>${rec.desc}</td>
+                        <td class="moneda">${rec.monto ? formatoBs(rec.monto) : 'N/A'}</td>
+                        <td><span class="badge ${rec.pagado ? 'bg-success' : 'bg-warning'}">${rec.pagado ? 'Pagado' : 'Pendiente'}</span></td>
                         <td>
-                            ${!r.pagado ? `<button class="btn btn-sm btn-success" onclick="marcarPagado('${r.id}')">Pagar</button>` : ''}
-                            <button class="btn btn-sm btn-danger" onclick="eliminar('recordatorios', '${r.id}')">Eliminar</button>
+                            ${!rec.pagado ? `<button class="btn btn-sm btn-success" onclick="marcarPagado(${idx})">Pagar</button>` : ''}
+                            <button class="btn btn-sm btn-danger" onclick="eliminarRecordatorio(${idx})">Eliminar</button>
                         </td>
                     </tr>
                 `;
             }).join('');
         }
 
-        // Categorías
-        function renderSelectCategorias() {
-            const select = document.getElementById('categoriaEgreso');
-            select.innerHTML = categorias.map(c => `<option>${c}</option>`).join('');
-        }
+        // Eventos de formularios
+        document.getElementById('formIngreso').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const nuevo = {
+                fecha: document.getElementById('fechaIngreso').value,
+                desc: document.getElementById('descIngreso').value,
+                monto: document.getElementById('montoIngreso').value
+            };
+            ingresos.push(nuevo);
+            guardarDatos();
+            renderIngresos();
+            calcularBalance();
+            e.target.reset();
+        });
 
-        function renderListaCategorias() {
-            const cont = document.getElementById('listaCategorias');
-            cont.innerHTML = categorias.map((c, i) => `
-                <span class="badge bg-secondary me-1 mb-1">
-                    ${c}
-                    <button type="button" class="btn-close btn-close-white btn-sm ms-1" onclick="eliminarCategoria('${c}')"></button>
-                </span>
-            `).join('');
-        }
+        document.getElementById('formEgreso').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const nuevo = {
+                fecha: document.getElementById('fechaEgreso').value,
+                categoria: document.getElementById('categoriaEgreso').value,
+                desc: document.getElementById('descEgreso').value,
+                monto: document.getElementById('montoEgreso').value
+            };
+            egresos.push(nuevo);
+            guardarDatos();
+            renderEgresos();
+            calcularBalance();
+            e.target.reset();
+        });
 
-        async function agregarCategoria() {
-            const nombre = document.getElementById('nuevaCategoria').value.trim();
-            if (nombre && !categorias.includes(nombre)) {
-                await addDoc(colCategorias, { nombre });
-                document.getElementById('nuevaCategoria').value = '';
-            }
-        }
-
-        async function eliminarCategoria(nombre) {
-            if (confirm(`¿Eliminar categoría "${nombre}"?`)) {
-                const q = query(colCategorias, where("nombre", "==", nombre));
-                const snap = await getDocs(q);
-                snap.forEach(d => deleteDoc(doc(db, "categorias", d.id)));
-            }
-        }
-
-        // CRUD
-        window.agregarIngreso = async () => {
-            const f = document.getElementById('formIngreso');
-            await addDoc(colIngresos, {
-                fecha: f.fechaIngreso.value,
-                desc: f.descIngreso.value,
-                monto: f.montoIngreso.value
-            });
-            f.reset();
-        };
-
-        window.agregarEgreso = async () => {
-            const f = document.getElementById('formEgreso');
-            await addDoc(colEgresos, {
-                fecha: f.fechaEgreso.value,
-                categoria: f.categoriaEgreso.value,
-                desc: f.descEgreso.value,
-                monto: f.montoEgreso.value
-            });
-            f.reset();
-        };
-
-        window.agregarRecordatorio = async () => {
-            const f = document.getElementById('formRecordatorio');
-            await addDoc(colRecordatorios, {
-                fecha: f.fechaRecordatorio.value,
-                desc: f.descRecordatorio.value,
-                monto: f.montoRecordatorio.value || null,
+        document.getElementById('formRecordatorio').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const nuevo = {
+                fecha: document.getElementById('fechaRecordatorio').value,
+                desc: document.getElementById('descRecordatorio').value,
+                monto: document.getElementById('montoRecordatorio').value || null,
                 pagado: false
+            };
+            recordatorios.push(nuevo);
+            guardarDatos();
+            renderRecordatorios();
+            e.target.reset();
+        });
+
+        // Acciones
+        function eliminarIngreso(idx) {
+            if (confirm('¿Eliminar este ingreso?')) {
+                ingresos.splice(idx, 1);
+                guardarDatos();
+                renderIngresos();
+                calcularBalance();
+            }
+        }
+
+        function eliminarEgreso(idx) {
+            if (confirm('¿Eliminar este egreso?')) {
+                egresos.splice(idx, 1);
+                guardarDatos();
+                renderEgresos();
+                calcularBalance();
+            }
+        }
+
+        function editarEgreso(idx) {
+            const egr = egresos[idx];
+            const nuevoFecha = prompt('Fecha (YYYY-MM-DD):', egr.fecha);
+            const nuevoDesc = prompt('Descripción:', egr.desc);
+            const nuevoMonto = prompt('Monto (Bs.):', egr.monto);
+            const nuevaCat = prompt('Categoría:', egr.categoria);
+            if (nuevoFecha && nuevoDesc && nuevoMonto && nuevaCat) {
+                egresos[idx] = { fecha: nuevoFecha, categoria: nuevaCat, desc: nuevoDesc, monto: nuevoMonto };
+                guardarDatos();
+                renderEgresos();
+                calcularBalance();
+            }
+        }
+
+        function eliminarRecordatorio(idx) {
+            if (confirm('¿Eliminar este recordatorio?')) {
+                recordatorios.splice(idx, 1);
+                guardarDatos();
+                renderRecordatorios();
+            }
+        }
+
+        function marcarPagado(idx) {
+            recordatorios[idx].pagado = true;
+            guardarDatos();
+            renderRecordatorios();
+            if (recordatorios[idx].monto) {
+                const egreso = {
+                    fecha: recordatorios[idx].fecha,
+                    categoria: 'Pago Recordatorio',
+                    desc: recordatorios[idx].desc,
+                    monto: recordatorios[idx].monto
+                };
+                egresos.push(egreso);
+                guardarDatos();
+                renderEgresos();
+                calcularBalance();
+            }
+        }
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', () => {
+            renderSelectCategorias();
+            renderListaCategorias();
+            calcularBalance();
+            renderIngresos();
+            renderEgresos();
+            renderRecordatorios();
+            // Fecha por defecto: hoy
+            document.querySelectorAll('input[type="date"]').forEach(input => {
+                if (!input.value) input.valueAsDate = new Date();
             });
-            f.reset();
-        };
-
-        window.eliminar = async (coleccion, id) => {
-            if (confirm('¿Eliminar?')) {
-                await deleteDoc(doc(db, coleccion, id));
-            }
-        };
-
-        window.editarEgreso = async (id, fecha, cat, desc, monto) => {
-            const nFecha = prompt('Fecha:', fecha);
-            const nCat = prompt('Categoría:', cat);
-            const nDesc = prompt('Descripción:', desc);
-            const nMonto = prompt('Monto:', monto);
-            if (nFecha && nCat && nDesc && nMonto) {
-                await updateDoc(doc(db, "egresos", id), {
-                    fecha: nFecha, categoria: nCat, desc: nDesc, monto: nMonto
-                });
-            }
-        };
-
-        window.marcarPagado = async (id) => {
-            const rec = recordatorios.find(r => r.id === id);
-            await updateDoc(doc(db, "recordatorios", id), { pagado: true });
-            if (rec.monto) {
-                await addDoc(colEgresos, {
-                    fecha: rec.fecha,
-                    categoria: "Pago Recordatorio",
-                    desc: rec.desc,
-                    monto: rec.monto
-                });
-            }
-        };
-
-        // Informe Mensual
-        window.mostrarInforme = () => {
-            const hoy = new Date();
-            const mes = hoy.getMonth();
-            const año = hoy.getFullYear();
-            const mesStr = hoy.toLocaleDateString('es-BO', { month: 'long', year: 'numeric' });
-            document.getElementById('mesInforme').textContent = mesStr;
-            document.getElementById('seccionInforme').style.display = 'block';
-
-            const desde = `${año}-${String(mes+1).padStart(2, '0')}-01`;
-            const hasta = `${año}-${String(mes+1).padStart(2, '0')}-31`;
-
-            const ingMes = ingresos.filter(i => i.fecha >= desde && i.fecha <= hasta);
-            const egrMes = egresos.filter(e => e.fecha >= desde && e.fecha <= hasta);
-
-            const totalIn = ingMes.reduce((s, i) => s + parseFloat(i.monto), 0);
-            const totalEg = egrMes.reduce((s, e) => s + parseFloat(e.monto), 0);
-
-            document.getElementById('resumenInforme').innerHTML = `
-                <p><strong>Ingresos:</strong> ${formatoBs(totalIn)}</p>
-                <p><strong>Egresos:</strong> ${formatoBs(totalEg)}</p>
-                <p><strong>Balance:</strong> ${formatoBs(totalIn - totalEg)}</p>
-            `;
-
-            const tbody = document.querySelector('#tablaInforme tbody');
-            tbody.innerHTML = [
-                ...ingMes.map(i => `<tr><td>Ingreso</td><td>${i.desc}</td><td>-</td><td>${formatoBs(i.monto)}</td></tr>`),
-                ...egrMes.map(e => `<tr><td>Egreso</td><td>${e.desc}</td><td>${e.categoria}</td><td>${formatoBs(e.monto)}</td></tr>`)
-            ].join('');
-        };
-
-        // Exportar CSV
-        window.exportarCSV = () => {
-            const rows = [
-                ["Tipo", "Fecha", "Descripción", "Categoría", "Monto"],
-                ...ingresos.map(i => ["Ingreso", i.fecha, i.desc, "", i.monto]),
-                ...egresos.map(e => ["Egreso", e.fecha, e.desc, e.categoria, e.monto])
-            ];
-            const csv = rows.map(r => r.join(",")).join("\n");
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `informe_${new Date().toISOString().slice(0,10)}.csv`;
-            a.click();
-        };
-
-        // Eventos
-        document.getElementById('formIngreso').onsubmit = (e) => { e.preventDefault(); agregarIngreso(); };
-        document.getElementById('formEgreso').onsubmit = (e) => { e.preventDefault(); agregarEgreso(); };
-        document.getElementById('formRecordatorio').onsubmit = (e) => { e.preventDefault(); agregarRecordatorio(); };
-
-        // Fecha hoy
-        document.querySelectorAll('input[type="date"]').forEach(i => i.valueAsDate = new Date());
+        });
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
